@@ -88,7 +88,7 @@ async function accessToken({ oauth_token, oauth_token_secret }, verifier) {
     }
 }
 
-async function getRequest({ oauth_token, oauth_token_secret }) {
+async function getRequest({ oauth_token, oauth_token_secret }, tweetData) {
 
     const token = {
         key: oauth_token,

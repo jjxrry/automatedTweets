@@ -1,8 +1,6 @@
-const queue = [
-    { text: "test queue tweet no 1" },
-    { text: "Second tweet" },
-    { text: "Third tweet" },
-];
+import fs from 'fs'
+
+const queue = JSON.parse(fs.readFileSync('queue.json', 'utf-8'))
 
 // Standard function to process the tweet queue
 export function processTweetQueue(oAuthAccessToken, getRequest) {
@@ -15,9 +13,10 @@ export function processTweetQueue(oAuthAccessToken, getRequest) {
         const tweet = queue[0]
 
         try {
-            const response = await getRequest(tweet, oAuthAccessToken);
+            const response = await getRequest(oAuthAccessToken, tweet);
             console.log('Tweet sent:', response);
             queue.shift()
+            fs.writeFileSync('queue.json', JSON.stringify(queue, null, 2))
         } catch (error) {
             console.error('Error sending tweet:', error);
         }
