@@ -67,10 +67,7 @@ async function requestToken() {
     }
 }
 
-async function accessToken({
-    oauth_token,
-    oauth_token_secret
-}, verifier) {
+async function accessToken(oauth_token, oauth_token_secret }, verifier) {
     const authHeader = oauth.toHeader(oauth.authorize({
         url: accessTokenURL,
         method: 'POST'
@@ -88,10 +85,7 @@ async function accessToken({
     }
 }
 
-async function getRequest({
-    oauth_token,
-    oauth_token_secret
-}) {
+async function getRequest({ oauth_token, oauth_token_secret }) {
 
     const token = {
         key: oauth_token,
