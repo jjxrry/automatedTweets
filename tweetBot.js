@@ -5,6 +5,9 @@ import OAuth from 'oauth-1.0a';
 import qs from 'querystring';
 import rl from 'readline'
 
+// load in tweet queue
+import { processTweetQueue } from './tweetQueue.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -22,9 +25,9 @@ const readline = rl.createInterface({
     output: process.stdout
 })
 
-const data = {
-    "text": "sent from my bot"
-}
+//const data = {
+//    "text": "sent from my bot"
+//}
 
 const endpointURL = `https://api.twitter.com/2/tweets`
 
@@ -67,7 +70,7 @@ async function requestToken() {
     }
 }
 
-async function accessToken(oauth_token, oauth_token_secret }, verifier) {
+async function accessToken({ oauth_token, oauth_token_secret }, verifier) {
     const authHeader = oauth.toHeader(oauth.authorize({
         url: accessTokenURL,
         method: 'POST'
@@ -98,7 +101,7 @@ async function getRequest({ oauth_token, oauth_token_secret }) {
     }, token));
 
     const req = await got.post(endpointURL, {
-        json: data,
+        json: tweetData,
         responseType: 'json',
         headers: {
             Authorization: authHeader["Authorization"],
@@ -125,7 +128,7 @@ async function getRequest({ oauth_token, oauth_token_secret }) {
         // Get the access token
         const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
         // Make the request
-        const response = await getRequest(oAuthAccessToken);
+        const response = await processTweetQueue(oAuthAccessToken, getRequest);
         console.dir(response, {
             depth: null
         });
