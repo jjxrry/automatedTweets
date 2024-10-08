@@ -11,5 +11,31 @@
             }
         },
         "timestamp": "2024-10-07T22:50:10.112Z"
+    },
+    {
+        "text": "test!!!",
+        "response": {
+            "data": {
+                "edit_history_tweet_ids": [
+                    "1843428724651504059"
+                ],
+                "id": "1843428724651504059",
+                "text": "test!!!"
+            }
+        },
+        "timestamp": "2024-10-07T23:10:31.932Z"
+    },
+    {
+        "text": "started building, have most of the base functionality up on the command line but deciding on how far i want to take it now",
+        "response": {
+            "data": {
+                "text": "started building, have most of the base functionality up on the command line but deciding on how far i want to take it now",
+                "id": "1843463426544415083",
+                "edit_history_tweet_ids": [
+                    "1843463426544415083"
+                ]
+            }
+        },
+        "timestamp": "2024-10-08T01:28:25.528Z"
     }
 ]

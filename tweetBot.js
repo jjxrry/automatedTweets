@@ -14,7 +14,6 @@ dotenv.config();
 // keys here
 const apiKey = process.env.APIKEY
 const apiSecret = process.env.APISECRET
-// console.log(apiKey)
 if (!apiKey || !apiSecret) {
     console.error('Environment variables are not loaded properly!');
 }
@@ -24,10 +23,6 @@ const readline = rl.createInterface({
     input: process.stdin,
     output: process.stdout
 })
-
-//const data = {
-//    "text": "sent from my bot"
-//}
 
 const endpointURL = `https://api.twitter.com/2/tweets`
 
