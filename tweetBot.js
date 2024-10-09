@@ -4,9 +4,11 @@ import crypto from 'crypto';
 import OAuth from 'oauth-1.0a';
 import qs from 'querystring';
 import rl from 'readline'
+import clipboardy from 'clipboardy'
 
 // load in tweet queue
 import { processTweetQueue } from './tweetQueue.js';
+import puppetAuth from './puppetAuth.js';
 
 // Load environment variables
 dotenv.config();
@@ -18,7 +20,6 @@ if (!apiKey || !apiSecret) {
     console.error('Environment variables are not loaded properly!');
 }
 
-// do stuff
 const readline = rl.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -119,6 +120,8 @@ async function getRequest({ oauth_token, oauth_token_secret }, tweetData) {
         // Get authorization
         authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token);
         console.log('Please go here and authorize:', authorizeURL.href);
+        clipboardy.writeSync(authorizeURL.href)
+        //const pin = await puppetAuth(authorizeURL.href)
         const pin = await input('Paste the PIN here: ');
         // Get the access token
         const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
