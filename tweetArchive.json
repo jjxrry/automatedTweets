@@ -50,5 +50,18 @@
             }
         },
         "timestamp": "2024-10-09T19:45:34.071Z"
+    },
+    {
+        "text": "cant find any way to bypass x api auth login -> copy auth pin -> make request, is that for real? on free tier only btw",
+        "response": {
+            "data": {
+                "edit_history_tweet_ids": [
+                    "1844123122531958891"
+                ],
+                "text": "cant find any way to bypass x api auth login -&gt; copy auth pin -&gt; make request, is that for real? on free tier only btw",
+                "id": "1844123122531958891"
+            }
+        },
+        "timestamp": "2024-10-09T21:09:49.308Z"
     }
 ]

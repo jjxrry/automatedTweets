@@ -6,14 +6,13 @@ dotenv.config()
 export async function puppetAuth(href) {
     const browser = await puppeteer.launch({
         headless: false,
-        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        userDataDir: '/Users/jerrygao/Library/Application Support/Google/Chrome',
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-infobars',
-            '--disable-extensions',
-        ]
+        //executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', userDataDir: '/Users/jerrygao/Library/Application Support/Google/Chrome',
+        //args: [
+        //    '--no-sandbox',
+        //    '--disable-setuid-sandbox',
+        //    '--disable-infobars',
+        //    '--disable-extensions',
+        //]
     })
     const page = await browser.newPage()
     console.log('pupp fire')
