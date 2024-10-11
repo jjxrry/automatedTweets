@@ -5,17 +5,25 @@ export const TwitterOAuth = () => {
     const [tweet, setTweet] = useState('');
     const [isAuthorized, setIsAuthorized] = useState(false);
 
-    // this is a shit show right now, the backend isn't setup at all
-    // we probably don't need to auth, we just call the function itself?
+    // this is wrong, need to actually enqueue the form, then after that is successful, then immediately make the submitRequest
+    const enqueueReqeust = () => {
+
+    }
 
     const submitRequest = () => {
         fetch('http://localhost:3000/api/request', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include'
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok){
+                    console.log('failed network response')
+                }
+                return response.json()
+            })
             .then(data => {
                 console.log('auth url copied: ', data.authorizationURL)
                 navigator.clipboard.writeText(data.authorizationURL).then(() => {
@@ -36,7 +44,7 @@ export const TwitterOAuth = () => {
                 onChange={(e) => setTweet(e.target.value)}
             />
 
-            <button onClick={submitRequest()}>Request Auth</button>
+            <button onClick={submitRequest}>Request Auth</button>
 
             {!isAuthorized ? (
                 <div>

@@ -4,19 +4,24 @@ import crypto from 'crypto';
 import OAuth from 'oauth-1.0a';
 import qs from 'querystring';
 import rl from 'readline'
-import clipboardy from 'clipboardy'
-// @ts-expect-error
 import express from 'express';
-
+//@ts-expect-error
+import cors from 'cors'
 // load in tweet queue
 import { processTweetQueue } from './tweetQueue.js';
 import puppetAuth from './puppetAuth.js';
 
-
-// Load environment variables
 dotenv.config();
-const app = express()
 
+const app = express()
+const corsOptions = {
+    origin: true,
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 app.use(express.json())
 
 // keys here
@@ -140,7 +145,7 @@ app.post('/api/submit', async (req, res) => {
             return await getRequest(token, tweetData)
         })
 
-        res.json(response)
+        res.json(JSON.stringify(response))
     } catch (e) {
         console.error('Error generating authorization URL:', e);
         res.status(500).json({ error: 'Error submitting pin' });
