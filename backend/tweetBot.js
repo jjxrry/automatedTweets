@@ -5,13 +5,19 @@ import OAuth from 'oauth-1.0a';
 import qs from 'querystring';
 import rl from 'readline'
 import clipboardy from 'clipboardy'
+// @ts-expect-error
+import express from 'express';
 
 // load in tweet queue
 import { processTweetQueue } from './tweetQueue.js';
 import puppetAuth from './puppetAuth.js';
 
+
 // Load environment variables
 dotenv.config();
+const app = express()
+
+app.use(express.json())
 
 // keys here
 const apiKey = process.env.APIKEY
@@ -113,26 +119,59 @@ async function getRequest({ oauth_token, oauth_token_secret }, tweetData) {
     }
 }
 
-(async () => {
+app.post('/api/request', async (req, res) => {
     try {
-        // Get request token
-        const oAuthRequestToken = await requestToken();
-        // Get authorization
-        authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token);
-        console.log('Please go here and authorize:', authorizeURL.href);
-        clipboardy.writeSync(authorizeURL.href)
-        //const pin = await puppetAuth(authorizeURL.href)
-        const pin = await input('Paste the PIN here: ');
-        // Get the access token
-        const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
-        // Make the request
-        const response = await processTweetQueue(oAuthAccessToken, getRequest);
-        console.dir(response, {
-            depth: null
-        });
+        const oAuthRequestToken = await requestToken()
+        authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token)
+        res.json({ authorizationURL: authorizeURL.href })
+
     } catch (e) {
-        console.log(e);
-        process.exit(-1);
+        console.error('Error generating authorization URL:', e);
+        res.status(500).json({ error: 'Error generating authorization URL' });
     }
-    process.exit();
-})();
+})
+
+app.post('/api/submit', async (req, res) => {
+    try {
+        const { pin, oauth_token, oauth_token_secret, tweetData } = req.body
+        const oAuthAccessToken = await accessToken({ oauth_token, oauth_token_secret }, pin.trim())
+
+        const response = await processTweetQueue(oAuthAccessToken, async (token) => {
+            return await getRequest(token, tweetData)
+        })
+
+        res.json(response)
+    } catch (e) {
+        console.error('Error generating authorization URL:', e);
+        res.status(500).json({ error: 'Error submitting pin' });
+    }
+})
+
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+    console.log(`port is up on port: ${PORT}`)
+})
+
+//(async () => {
+//    try {
+//        // Get request token
+//        const oAuthRequestToken = await requestToken();
+//        // Get authorization
+//        authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token);
+//        console.log('Please go here and authorize:', authorizeURL.href);
+//        clipboardy.writeSync(authorizeURL.href)
+//        //const pin = await puppetAuth(authorizeURL.href)
+//        const pin = await input('Paste the PIN here: ');
+//        // Get the access token
+//        const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
+//        // Make the request
+//        const response = await processTweetQueue(oAuthAccessToken, getRequest);
+//        console.dir(response, {
+//            depth: null
+//        });
+//    } catch (e) {
+//        console.log(e);
+//        process.exit(-1);
+//    }
+//    process.exit();
+//})();>
