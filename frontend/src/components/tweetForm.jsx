@@ -11,6 +11,14 @@ export const TwitterOAuth = () => {
     // this shit dont work
     // authurl is invalid on request
     const pinRequest = () => {
+        // maybe we check here instead, pass it into formatTweet(tweet) then we can pass it into submit request as an valid formatted object
+        if (tweet === '') {
+            console.log('tweet is empty')
+            return
+        }
+
+        //formatTweet(tweet)
+
         fetch('http://localhost:3000/api/request', {
             method: 'POST',
             headers: {
@@ -35,11 +43,11 @@ export const TwitterOAuth = () => {
     }
 
     // submit needs to have the tweet form filled out fully
-    const submitRequest = () => {
-        if (tweet === '') {
-            console.log('tweet is empty')
-            return
-        }
+    const submitRequest = (tweetData) => {
+        //if (tweet === '') {
+        //    console.log('tweet is empty')
+        //    return
+        //}
         fetch('http://localhost:3000/api/submit', {
             method: 'POST',
             headers: {
