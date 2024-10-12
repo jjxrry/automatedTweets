@@ -6,11 +6,11 @@ export const TwitterOAuth = () => {
     const [isAuthorized, setIsAuthorized] = useState(false);
 
     // this is wrong, need to actually enqueue the form, then after that is successful, then immediately make the submitRequest
-    const enqueueReqeust = () => {
-
-    }
-
-    const submitRequest = () => {
+    // do we return the data object to the backend as tweetData or can we just do it all in the submitWriteRequest after we get the pin
+    //
+    // this shit dont work
+    // authurl is invalid on request
+    const pinRequest = () => {
         fetch('http://localhost:3000/api/request', {
             method: 'POST',
             headers: {
@@ -19,9 +19,11 @@ export const TwitterOAuth = () => {
             credentials: 'include'
         })
             .then(response => {
-                if (!response.ok){
+                if (!response.ok) {
                     console.log('failed network response')
                 }
+                setIsAuthorized(true)
+                console.log('auth set to true')
                 return response.json()
             })
             .then(data => {
@@ -29,6 +31,27 @@ export const TwitterOAuth = () => {
                 navigator.clipboard.writeText(data.authorizationURL).then(() => {
                     alert('auth href copied to clipboard')
                 })
+            })
+    }
+
+    // submit needs to have the tweet form filled out fully
+    const submitRequest = () => {
+        if (tweet === '') {
+            console.log('tweet is empty')
+            return
+        }
+        fetch('http://localhost:3000/api/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.log('failed to write')
+                }
+                return response.json()
             })
     }
 
@@ -44,7 +67,8 @@ export const TwitterOAuth = () => {
                 onChange={(e) => setTweet(e.target.value)}
             />
 
-            <button onClick={submitRequest}>Request Auth</button>
+            <button onClick={pinRequest}>Request Auth</button>
+            <button onClick={submitRequest}>Tweet to Queue</button>
 
             {!isAuthorized ? (
                 <div>

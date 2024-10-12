@@ -31,10 +31,10 @@ if (!apiKey || !apiSecret) {
     console.error('Environment variables are not loaded properly!');
 }
 
-const readline = rl.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
+//const readline = rl.createInterface({
+//    input: process.stdin,
+//    output: process.stdout
+//})
 
 const endpointURL = `https://api.twitter.com/2/tweets`
 
@@ -50,14 +50,14 @@ const oauth = OAuth({
     hash_function: (baseString, key) => crypto.createHmac('sha1', key).update(baseString).digest('base64')
 })
 
-async function input(prompt) {
-    return new Promise(async (resolve, reject) => {
-        readline.question(prompt, (out) => {
-            readline.close()
-            resolve(out)
-        })
-    })
-}
+//async function input(prompt) {
+//    return new Promise(async (resolve, reject) => {
+//        readline.question(prompt, (out) => {
+//            readline.close()
+//            resolve(out)
+//        })
+//    })
+//}
 
 async function requestToken() {
     const authHeader = oauth.toHeader(oauth.authorize({
@@ -124,6 +124,15 @@ async function getRequest({ oauth_token, oauth_token_secret }, tweetData) {
     }
 }
 
+//app.post('/api/write', async (req, res) => {
+//    try {
+//
+//    } catch (e) {
+//        console.error('Error Writing to Queue:', e);
+//        res.status(500).json({ error: 'Error Writing to Queue' });
+//    }
+//})
+
 app.post('/api/request', async (req, res) => {
     try {
         const oAuthRequestToken = await requestToken()
@@ -164,9 +173,12 @@ app.listen(PORT, () => {
 //        // Get authorization
 //        authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token);
 //        console.log('Please go here and authorize:', authorizeURL.href);
+//
 //        clipboardy.writeSync(authorizeURL.href)
+//
 //        //const pin = await puppetAuth(authorizeURL.href)
 //        const pin = await input('Paste the PIN here: ');
+//
 //        // Get the access token
 //        const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
 //        // Make the request
